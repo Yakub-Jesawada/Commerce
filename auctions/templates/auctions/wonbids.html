@@ -1,0 +1,29 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if is_wonbids %}
+        <h2>No Bids Won Yet!!</h2>
+    {% else %}
+        <h2>Won Bids</h2>
+        {% for listing in listings%}
+            <div class="modal-body row" style="border:1px solid rgb(166, 158, 158);margin: 20px; padding: 20px;">
+                <div class="col-md-4">
+                    <img src="{{listing.imageurl}}" width='250' height="300"/>
+                </div>
+                <div class="col-md-6">
+                    <h2><strong>{{listing.listingname}}</strong></h2>
+                    <p><strong>Price: </strong>${{listing.baseprice}}</p>
+                    <p>{{listing.description}}</p>
+                    <sub>{{listing.listingdate}}</sub>
+                    <br/>
+                    <br/>
+                    <p><strong>Won Price: </strong>${{listing.listingsaleprice}}</p>
+                </div>
+                <div class="col-md-2">
+                    <img src="https://thumb9.shutterstock.com/display_pic_with_logo/164459732/526759486/stock-photo-you-win-stamp-sign-text-word-logo-green-526759486.jpg" width='250' height="300"/>
+                </div>
+                <hr/>
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endblock %}

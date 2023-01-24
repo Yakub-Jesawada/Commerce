@@ -1,0 +1,69 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    {% if item_in_watchlist %}
+        <button class="btn btn-dark btn-sm" style="padding:0px 2px 0px 2px">Watchlist</button>
+    {% endif %}
+    <h1>{{itemdetails.listingname}}</h1>
+    <img src="{{itemdetails.imageurl}}" alt="This is an Image of {{itemdetails.listingname}}" width='500' height="400" />
+    <br/>
+    <br/>
+    <h6>{{itemdetails.description}}</h6>
+    <br/>
+    <h2>${{itemdetails.baseprice | floatformat:2}}</h2>
+    <div class="btn-group">
+        <div style="padding-right: 20px;">
+            <form action="{% url 'addToWatchlist' %}" method ="POST">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-secondary" name='id' value="{{itemdetails.listingid}}">Add to Watchlist</button>
+            </form>
+        </div>
+        <div>
+            {% if is_owner %}
+                <form action="{% url 'closeListing' %}" method="POST">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger" name="id" value="{{itemdetails.listingid}}">Close the Bid</button>
+                </form>
+            {% endif %}
+        </div>
+    </div>
+    <br/>
+    <h3>Details</h3>
+    <ul>
+        <li>Listed by : {{itemdetails.userid.username}}</li>
+        <li>Category: {{itemdetails.category}}</li>
+    </ul>
+    <h3>Bidding</h3>
+    <sub>{{totalbid}} bid(s) so far.Current highest bid is {{highestbid}} </sub>
+    <br/>
+    <form action="/item/{{itemdetails.listingid}}" method="POST">
+        {% csrf_token %}
+        <input type="number" class="form-control" name="lBid" required>
+        <br/>
+        <button type="submit" class="btn btn-primary">Submit</button>
+    </form> 
+    
+    {% if is_msg %}
+        {% if smessage  %}
+            <div class="lert alert-light alert-dismissible fade show">
+                <strong>Status!!</strong>{{smessage}}
+            </div>
+        {% endif %}
+    {% endif %}
+    <br/>
+    <h3>Comments</h3>
+    {% for comment in comments %}
+        <ul>
+            <li><strong>{{comment.commentator.username}} Told:</strong> {{comment.commentry}}</li>
+        </ul>
+    {% endfor %}
+    <form action="/addCommment/{{itemdetails.listingid}}" method = "POST">
+        {% csrf_token %}
+        <div class = "form-group">
+            <label for = "comment"><strong>Your Comment</strong></label>
+            <textarea class = "form-control" rows = "3" name="comment" placeholder = "Item Review" required></textarea>
+            <br/>
+            <button class="btn btn-primary">Post</button>
+        </div>
+    </form>
+{% endblock %}

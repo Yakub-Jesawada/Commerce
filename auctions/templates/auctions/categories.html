@@ -1,0 +1,49 @@
+{% extends "auctions/layout.html" %}
+
+{% block body %}
+    <h2>Categories</h2>
+    <form action="{% url 'categories' %}" method="post">
+        {% csrf_token %}
+        <div align = 'center'>
+            <select class="form-select" aria-label="Default select example" name="category">
+                <option selected disabled>Open this select menu</option>
+                {% for item in category %}
+                    <option value="{{item}}">{{item}}</option>
+                {% endfor %}
+              </select>
+              <br/>
+              <br/>
+              <button type="submit" class="btn btn-primary">Submit</button>
+              <br/>
+              <hr/>
+        </div>
+    </form>
+    {% for listing in listings%}
+        <div class="modal-body row" style="border:1px solid rgb(166, 158, 158);margin: 20px; padding: 20px;">
+            <div class="col-md-4">
+                <img src="{{listing.imageurl}}" width='300' height="250"/>
+            </div>
+            <div class="col-md-8">
+                <h2><strong>{{listing.listingname}}</strong></h2>
+                <p><strong>Price: </strong>${{listing.baseprice}}</p>
+                <p>{{listing.description}}</p>
+                <sub>{{listing.listingdate}}</sub>
+                <br/>
+                <br/>
+                <br/><div class="btn-group">
+                    <div style="padding-right: 20px;">
+                        <form action="{% url 'addToWatchlist' %}" method ="POST">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-secondary" name='id' value="{{listing.listingid}}">Add to Watchlist</button>
+                        </form>
+                    </div>
+                    <div>
+                        <a type="submit" class="btn btn-primary" href="/item/{{listing.listingid}}">View</a>
+                    </div>
+                </div>   
+            </div>
+            <hr/>
+        </div>
+    {% endfor %}
+{% endblock %}
+
